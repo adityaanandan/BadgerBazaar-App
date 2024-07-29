@@ -55,22 +55,65 @@ def test_token(request):
     return Response({'passed for username {}'.format(request.user.username)})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request):
     user = request.user 
     profile = profile.objects.get(user=user)
+    body = json.loads(request.body)
     try: 
-        profile.name = request.data['name']
-        profile.bio = request.data['bio']
-        profile.profile_img = request.data['profile_img']
+        profile.name = body.get('name', profile.name)
+        profile.bio = body.get('bio', profile.bio)
+        profile.profile_img = body.get('profile_img', profile.profile_img)
         profile.save()
         return Response({"detail": "Profile updated."}, 
                         status=status.HTTP_200_OK)
     except: 
         return Response({"detail": "Profile not updated."}, 
                         status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_user_profile(request):
+    body = json.loads(request.body)
+    username = body.get('username')
+    user_profile = User.objects.get(username=username) 
+    profile = profile.objects.get(user__in=user_profile)
+    serializer = ProfileSerializer(instance = profile)
+    return Response(serializer.data, 
+                    status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def follow_user(request):
+    user = request.user 
+    follow_user = request.data['follow_username']
+    profile = profile.objects.get(user__in=user)
+    user_to_follow = User.objects.get(username=follow_user)
+    profile_to_follow = profile.objects.get(user__in=user_to_follow)
+    profile.follows.add(profile_to_follow)
+    profile.save()
+    return Response({"detail": "Followed user."}, 
+                    status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def unfollow_user(request):
+    user = request.user 
+    unfollow_user = request.data['follow_username']
+    profile = profile.objects.get(user=user)
+    user_to_unfollow = User.objects.get(username=unfollow_user)
+    profile_to_unfollow = profile.objects.get(user__in=user_to_unfollow)
+    profile.follows.remove(profile_to_unfollow)
+    profile.save()
+    return Response({"detail": "Unfollowed user."}, 
+                    status=status.HTTP_200_OK)
+
+
+
+
     
 
 

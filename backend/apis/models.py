@@ -22,9 +22,10 @@ class Item(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to="item_imgs", blank=True, null=True)
     starting_price = models.FloatField()
-    current_bidder = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="current_bids")
+    current_bidder = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="current_bids", null=True, blank=True)
     is_sold = models.BooleanField(default=False)
     is_transferred = models.BooleanField(default=False)
+    sell_by = models.DateTimeField(default = None, null = True, blank = True)
 
 
 

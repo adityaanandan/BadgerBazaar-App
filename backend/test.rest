@@ -1,22 +1,27 @@
-POST http://127.0.0.1:8000/signup
+GET http://127.0.0.1:8000/items/get_items_by_owner
 Content-Type: application/json
 
 {
-    "username": "jahnuk",
-    "password": "kannan123"
+    "username": "priyar"
 }
 ###
 
-POST http://127.0.0.1:8000/login
+POST http://127.0.0.1:8000/items/add_item
 Content-Type: application/json
+Authorization: Token 668c73099858a488e858cee1a661853836b7229e
 
 {
-    "username": "jahnuk",
-    "password": "kannan123"
+    "name": "item1", 
+    "description": "item1 description",
+    "starting_price": 15.50
+
 }
 ###
-GET http://127.0.0.1:8000/test_token
+POST http://127.0.0.1:8000/user/logout 
 Content-Type: application/json
-Authorization: Token ef0e3758e375cc1732bec757b757e27da2df734f
+Authorization: Token 668c73099858a488e858cee1a661853836b7229e
 
-{}
+{
+    "username": "priyar", 
+    "password": "1234"
+}

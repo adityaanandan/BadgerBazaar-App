@@ -1,4 +1,4 @@
-from ..models import Item, Profile
+from ..models import Item, Profile, OutBid
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from ..serializers import ItemSerializer
@@ -89,7 +89,7 @@ def add_item(request):
 @permission_classes([IsAuthenticated])
 def bid_on_item(request):
     user = request.user 
-    bidder = Profile.objects.filter(user=user) 
+    bidder = Profile.objects.filter(user__in = user) 
     
     data = json.loads(request.body)
     item_id = data.get('item_id')
@@ -106,12 +106,23 @@ def bid_on_item(request):
     old_bidder = item.current_bidder
     item.current_bidder = bidder
     item.save() 
-    if not old_bidder: 
-        return Response({"detail": "Bid successful."},
-                        status=status.HTTP_200_OK)
     
-    return Response({"old_bidder": old_bidder, "detail": "Bid successful."}, 
+    if old_bidder: 
+        outbid = OutBid(user=old_bidder, item=item, bidder=bidder, bid=bid_amount)
+        outbid.save() 
+
+    query = OutBid.objects.filter(item__in = item)
+    for bid in query: 
+        bid.bid_amount = bid_amount
+        bid.bidder = bidder 
+        bid.save() 
+    
+    
+    return Response({"detail": "Bid successful."}, 
                     status=status.HTTP_200_OK)
+
+
+
 
 
 

@@ -27,6 +27,12 @@ class Item(models.Model):
     is_transferred = models.BooleanField(default=False)
     sell_by = models.DateTimeField(default = None, null = True, blank = True)
 
+class OutBid(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="user_outbid")
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="bidder_outbid")
+    bid = models.FloatField(default = 0.0)
+
 
 
 def create_user_profile(sender, instance, created, **kwargs):

@@ -1,7 +1,7 @@
 from ..models import Item, Profile, OutBid
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from ..serializers import ItemSerializer
+from ..serializers import ItemSerializer, OutBidSerializer
 from rest_framework import status
 from django.contrib.auth.models import User
 import json
@@ -91,6 +91,7 @@ def bid_on_item(request):
     user = request.user 
     bidder = Profile.objects.filter(user__in = user) 
     
+    
     data = json.loads(request.body)
     item_id = data.get('item_id')
     bid_amount = data.get('bid_amount')
@@ -101,7 +102,10 @@ def bid_on_item(request):
     if item.starting_price >= bid_amount:
         return Response({"detail": "Bid amount too low."}, 
                         status=status.HTTP_400_BAD_REQUEST)
-    
+    # if user had been outbid, delete their outbid from database 
+    query = OutBid.objects.filter(item__in = item, user__in = bidder)
+    for bid in query: 
+        bid.delete()
     # notify old current bidder that they have been outbid
     old_bidder = item.current_bidder
     item.current_bidder = bidder
@@ -120,6 +124,43 @@ def bid_on_item(request):
     
     return Response({"detail": "Bid successful."}, 
                     status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_oubids_by_user(request):
+    user = request.user 
+    profile = Profile.objects.filter(user__in = user)[0]
+    outbids = OutBid.objects.filter(user__in = profile)
+    serializer = OutBidSerializer(instance = outbids, many=True)
+    return Response(serializer.data, 
+                    status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def decline_bid(request): 
+    user = request.user 
+    profile = Profile.objects.filter(user__in = user)[0]
+    outbids = OutBid.objects.filter(user__in = profile)
+    data = json.loads(request.body)
+    item_id = data.get('item_id')
+    item = Item.objects.filter(id=item_id)
+    if not item:
+        return Response({"detail": "Not found."}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    
+    query = OutBid.objects.filter(item__in = item, user__in = profile)
+    for bid in query: 
+        bid.delete()
+    return Response({"detail": "Bid declined."}, 
+                    status=status.HTTP_200_OK)
+
+
+
+
 
 
 

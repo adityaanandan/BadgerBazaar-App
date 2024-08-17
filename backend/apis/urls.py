@@ -12,4 +12,7 @@ urlpatterns = [
     re_path('user/update_user_profile', user_views.update_user_profile),
     re_path('items/get_items_by_owner', item_views.get_items_by_owner),
     re_path('items/add_item', item_views.add_item),
+    re_path('items/get_items_by_category/(?P<category>\w+)', item_views.get_items_by_category),
+    re_path('items/bid', item_views.bid_on_item), 
+    re_path('items/items_by_bidder', item_views.get_items_by_bidder),
 ]

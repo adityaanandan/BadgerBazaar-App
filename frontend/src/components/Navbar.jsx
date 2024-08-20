@@ -2,32 +2,33 @@
 import { NavLink } from "react-router-dom"
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import Bucky from "../assets/BuckyBadger.svg"
+import Bucky from "../assets/badgerBazaar_logo.png"
 
 export const Navbar = () => {
   return (
-    <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-background border-b">
+    <header className="bg-[#202528] flex items-center justify-between h-24 px-4 md:px-6 bg-background border-b">
       <NavLink to="#" className="flex items-center gap-2" prefetch={false}>
-        <BadgeIcon className="w-6 h-6" />
-        <span className="text-lg font-bold">BadgerBazaar</span>
+        <img src={Bucky} alt="" className = "w-32 h-32" />
+        
+        <span className="text-lg font-poppins text-white font-bold">BadgerBazaar</span>
       </NavLink>
       <nav className="hidden md:flex items-center gap-4">
-        <NavLink to="#" className="text-sm font-medium transition-colors hover:text-primary" >
-          Home
+        <NavLink to="/" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary" >
+          About
         </NavLink>
-        <NavLink to="#" className="text-sm font-medium transition-colors hover:text-primary">
+        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
           Browse
         </NavLink>
-        <NavLink to="#" className="text-sm font-medium transition-colors hover:text-primary">
+        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
           Sell
         </NavLink>
-        <NavLink to="#" className="text-sm font-medium transition-colors hover:text-primary" >
+        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary" >
           Profile
         </NavLink>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="md:hidden">
+          <Button size="icon" className="md:hidden bg-dark">
             <MenuIcon className="h-6 w-6" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
@@ -35,16 +36,16 @@ export const Navbar = () => {
         <SheetContent side="right">
           <div className="grid gap-4 p-4">
             <NavLink
-              to="#"
-              className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary"
+              to="/"
+              className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
               <HomeIcon className="w-5 h-5" />
-              Home
+              About
             </NavLink>
             <NavLink
               to="#"
-              className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary"
+              className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
               <SearchIcon className="w-5 h-5" />
@@ -52,7 +53,7 @@ export const Navbar = () => {
             </NavLink>
             <NavLink
               to="#"
-              className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary"
+              className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
               <PlusIcon className="w-5 h-5" />
@@ -60,7 +61,7 @@ export const Navbar = () => {
             </NavLink>
             <NavLink
               to="#"
-              className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary"
+              className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
               <UserIcon className="w-5 h-5" />

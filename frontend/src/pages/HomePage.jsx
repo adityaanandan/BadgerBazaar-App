@@ -1,8 +1,8 @@
-import Navbar from '../components/Navbar';
+import Expo from '../components/Expo';
 const HomePage = () => {
   return (
     <>
-        <Navbar />
+       <Expo />
     </>
   )
 }

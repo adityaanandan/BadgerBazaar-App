@@ -9,6 +9,14 @@ import ItemsPage from './pages/ItemsPage';
 import ProfilePage from './pages/ProfilePage';
 import SellPage from './pages/SellPage';
 
+import { Navigate } from 'react-router-dom';
+
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem('authToken');
+
+  return token ? children : <Navigate to="/login" />;
+};
+
 const router = createBrowserRouter(
   createRoutesFromElements(
 

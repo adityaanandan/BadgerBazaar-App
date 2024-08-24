@@ -16,13 +16,13 @@ export const Navbar = () => {
         <NavLink to="/" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary" >
           About
         </NavLink>
-        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
+        <NavLink to="/browse" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
           Browse
         </NavLink>
-        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
+        <NavLink to="/sell" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary">
           Sell
         </NavLink>
-        <NavLink to="#" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary" >
+        <NavLink to="/profile" className="text-sm font-poppins font-medium transition-colors text-white hover:text-primary" >
           Profile
         </NavLink>
       </nav>
@@ -44,7 +44,7 @@ export const Navbar = () => {
               About
             </NavLink>
             <NavLink
-              to="#"
+              to="/browse"
               className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
@@ -52,7 +52,7 @@ export const Navbar = () => {
               Browse
             </NavLink>
             <NavLink
-              to="#"
+              to="/sell"
               className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >
@@ -60,7 +60,7 @@ export const Navbar = () => {
               Sell
             </NavLink>
             <NavLink
-              to="#"
+              to="/profile"
               className="flex items-center gap-2 text-sm font-poppins font-medium transition-colors hover:text-primary"
               
             >

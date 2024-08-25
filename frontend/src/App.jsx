@@ -10,12 +10,9 @@ import ProfilePage from './pages/ProfilePage';
 import SellPage from './pages/SellPage';
 
 import { Navigate } from 'react-router-dom';
+import PrivateRoute from './layouts/PrivateRoute';
 
-const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('authToken');
 
-  return token ? children : <Navigate to="/login" />;
-};
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,9 +28,11 @@ const router = createBrowserRouter(
         <Route index element={<HomePage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/browse" element={<ItemsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/sell" element={<SellPage />} />
-
+        <Route element={<PrivateRoute />}> 
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/sell" element={<SellPage />} />
+        </Route> 
+        
       </Route>
       
 

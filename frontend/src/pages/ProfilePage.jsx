@@ -28,6 +28,7 @@ const ProfilePage = () => {
       <ProfileItems userItems = {userItems}/>
       <ProfileBids userBids={userBids}/>
       <Billing/>
+      
     </div>
   )
 }

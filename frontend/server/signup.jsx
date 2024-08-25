@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import the hook
 const signup = async (username, password) => {
     const navigate = useNavigate();
     try {
-        const response = await axios.post('http://your-api-url.com/login', {
+        const response = await axios.post('http://localhost:8000/signup', {
             username: username,  // Key for username
             password: password   // Key for password
         });
@@ -15,8 +15,9 @@ const signup = async (username, password) => {
         // Store the token and user data in localStorage
         localStorage.setItem('authToken', token);
         localStorage.setItem('user', JSON.stringify(user));
+        console.log(localStorage.getItem('authToken'))
         axios.defaults.headers.common['Authorization'] = `Token ${localStorage.getItem('authToken')}`;
-        navigate('/')
+        navigate('/login')
 
         
 

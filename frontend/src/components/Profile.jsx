@@ -7,13 +7,22 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { PencilIcon } from 'lucide-react'
 import Blank from "../assets/placeholder.svg"
+import logout from '../../server/logout'
+import { useNavigate } from 'react-router-dom'
+
 const Profile = ({userData}) => {
     const [isEditingUsername, setIsEditingUsername] = useState(false)
     const [newUsername, setNewUsername] = useState(userData.username)
+    const navigate = useNavigate()
     const handleUsernameChange = () => {
         // In a real app, you'd update the username on the server here
         setIsEditingUsername(false)
       }
+
+    const handleLogout = () => {
+        logout()
+        navigate('/login')
+    }
   return (
     <Card>
         <CardHeader>
@@ -51,7 +60,10 @@ const Profile = ({userData}) => {
             </div>
           </div>
           <Button className = "font-poppins">Change Profile Picture</Button>
+          <Button onClick = {handleLogout} className="font-poppins bg-red-600 ml-4">Logout</Button>
+
         </CardContent>
+
       </Card>
   )
 }

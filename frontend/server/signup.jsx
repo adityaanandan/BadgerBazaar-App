@@ -1,10 +1,8 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'; // Import the hook
 
 const signup = async (username, password) => {
-    const navigate = useNavigate();
     try {
-        const response = await axios.post('http://localhost:8000/signup', {
+        const response = await axios.post('http://localhost:8000/user/signup', {
             username: username,  // Key for username
             password: password   // Key for password
         });
@@ -17,13 +15,17 @@ const signup = async (username, password) => {
         localStorage.setItem('user', JSON.stringify(user));
         console.log(localStorage.getItem('authToken'))
         axios.defaults.headers.common['Authorization'] = `Token ${localStorage.getItem('authToken')}`;
-        navigate('/login')
+        return { success: true };
+
 
         
 
-        console.log('Logged in successfully!');
     } catch (error) {
-        console.error('Login failed:', error);
+        if (error.response && error.response.status === 400) {
+            return { success: false, message: 'Invalid username or password.' };
+        } else {
+            return { success: false, message: 'An unexpected error occurred. Please try again.' };
+        }
     }
 }
 

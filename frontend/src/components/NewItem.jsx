@@ -9,6 +9,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { CalendarIcon, PlusIcon } from 'lucide-react'
 import { format } from "date-fns"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 
 import Blank from "../assets/placeholder.svg"
 
@@ -37,8 +39,12 @@ const NewItem = () => {
 
     
   return (
-    <div className = "w-3/4 mx-auto">
-      <h1 className="text-3xl font-bold text-center font-poppins">Add Item</h1>
+    <div id = "add" className = "mx-auto mt-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className = "font-poppins">Add Item</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
         <form className="space-y-4">
           <div>
             <Label className = "font-bold font-poppins" htmlFor="title">Item Title</Label>
@@ -124,6 +130,11 @@ const NewItem = () => {
             Add Item
           </Button>
         </form>
+          
+          
+        </CardContent>
+      </Card>
+        
       </div>
   )
 }

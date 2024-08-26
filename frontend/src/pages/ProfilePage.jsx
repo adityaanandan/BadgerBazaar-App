@@ -25,7 +25,7 @@ const ProfilePage = () => {
   return (
     <div className="container mx-auto p-4 space-y-8">
       <Profile userData={userData}/>
-      <ProfileItems userItems = {userItems}/>
+      <ProfileItems userItems = {userItems} loc = {true} />
       <ProfileBids userBids={userBids}/>
       <Billing/>
       

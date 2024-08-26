@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Pagination from './Pagination'
 import ProductCard from './ProductCard'
+import Searchbar from './Searchbar'
 
 // Sample product data
 const products = [
@@ -28,7 +29,9 @@ export default function ProductLayout() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center font-poppins">Auction Items</h1>
+      <Searchbar />
+      <h1 className="text-3xl font-bold mb-8 text-center font-poppins">Items</h1>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {getCurrentPageItems().map((product) => (
           <ProductCard 

@@ -3,9 +3,10 @@ import { PencilIcon, TrashIcon } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Blank  from "../assets/placeholder.svg"
+import {Link} from 'react-scroll'
 
 
-const ProfileItems = ({userItems}) => {
+const ProfileItems = ({userItems, loc}) => {
   return (
     <Card>
         <CardHeader>
@@ -35,7 +36,11 @@ const ProfileItems = ({userItems}) => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">Add New Item</Button>
+          {loc ? <a href="/sell"><Button  className="w-full font-poppins">Add Item</Button> </a> : <Link spy={true} 
+      smooth={true} 
+      offset={0} 
+      duration={500}
+      to="add"><Button className="w-full font-poppins">New Item</Button> </Link>}
         </CardFooter>
       </Card>
   )

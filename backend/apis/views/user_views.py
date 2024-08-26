@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
+from ..models import Profile
+
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
@@ -72,14 +74,13 @@ def update_user_profile(request):
     except: 
         return Response({"detail": "Profile not updated."}, 
                         status=status.HTTP_400_BAD_REQUEST)
-
+    
 @api_view(['GET'])
-def get_user_profile(request):
-    body = json.loads(request.body)
-    username = body.get('username')
-    user_profile = User.objects.get(username=username) 
-    profile = profile.objects.get(user__in=user_profile)
-    serializer = ProfileSerializer(instance = profile)
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_your_profile(request):
+    user_profile = request.user
+    serializer = UserSerializer(instance = user_profile)
     return Response(serializer.data, 
                     status=status.HTTP_200_OK)
 

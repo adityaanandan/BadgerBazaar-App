@@ -10,7 +10,8 @@ from ..models import Profile
 
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -56,60 +57,46 @@ def logout(request):
 def test_token(request): 
     return Response({'passed for username {}'.format(request.user.username)})
 
-
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def update_user_profile(request):
+@parser_classes([MultiPartParser, FormParser, JSONParser])
+def edit_profile(request): 
     user = request.user 
-    profile = profile.objects.get(user=user)
-    body = json.loads(request.body)
-    try: 
-        profile.name = body.get('name', profile.name)
-        profile.bio = body.get('bio', profile.bio)
-        profile.profile_img = body.get('profile_img', profile.profile_img)
-        profile.save()
-        return Response({"detail": "Profile updated."}, 
-                        status=status.HTTP_200_OK)
-    except: 
-        return Response({"detail": "Profile not updated."}, 
-                        status=status.HTTP_400_BAD_REQUEST)
+    profile = Profile.objects.get(user=user)
     
+    # Handle both JSON and form data
+    data = request.data
+
+    if 'username' in data:
+        user.username = data['username']
+        user.save()
+    
+    if 'bio' in data:
+        profile.bio = data['bio']
+    
+    if 'email' in data:
+        profile.email = data['email']
+    
+    if 'profile_img' in request.FILES:
+        profile.profile_img = request.FILES['profile_img']
+    
+    profile.save()
+    
+    serializer = ProfileSerializer(instance=profile)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_your_profile(request):
-    user_profile = request.user
-    serializer = UserSerializer(instance = user_profile)
-    return Response(serializer.data, 
-                    status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def follow_user(request):
-    user = request.user 
-    follow_user = request.data['follow_username']
-    profile = profile.objects.get(user__in=user)
-    user_to_follow = User.objects.get(username=follow_user)
-    profile_to_follow = profile.objects.get(user__in=user_to_follow)
-    profile.follows.add(profile_to_follow)
-    profile.save()
-    return Response({"detail": "Followed user."}, 
-                    status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def unfollow_user(request):
-    user = request.user 
-    unfollow_user = request.data['follow_username']
-    profile = profile.objects.get(user=user)
-    user_to_unfollow = User.objects.get(username=unfollow_user)
-    profile_to_unfollow = profile.objects.get(user__in=user_to_unfollow)
-    profile.follows.remove(profile_to_unfollow)
-    profile.save()
-    return Response({"detail": "Unfollowed user."}, 
+def get_profile(request): 
+    user = request.user
+    profile = Profile.objects.filter(user=user)[0]
+    serializer = ProfileSerializer(instance = profile)
+    response_data = serializer.data
+    response_data['username'] = user.username
+    return Response(response_data, 
                     status=status.HTTP_200_OK)
 
 

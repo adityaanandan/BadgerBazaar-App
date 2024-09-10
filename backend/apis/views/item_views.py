@@ -12,6 +12,18 @@ from rest_framework.decorators import authentication_classes, permission_classes
 
 from django.db import IntegrityError
 
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_bids(request): 
+    user = request.user 
+    profile = Profile.objects.filter(user = user)[0]
+    outbids = OutBid.objects.filter(bidder = profile)
+    items = Item.objects.filter(current_bidder = profile)
+
+    outbid_serializer = OutBidSerializer(instance = outbids, many=True)
+    items_serializer = ItemSerializer(instance = items, many=True)
+    return Response({"outbids": outbid_serializer.data, "highest": items_serializer.data})
 
 
 @api_view(['GET'])
@@ -31,20 +43,24 @@ def get_items_by_category(request, category):
                         status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-def get_items_by_owner(request):
-    data = json.loads(request.body)
-
-    item_username = data.get('username')
-    
-    item_user = User.objects.filter(username=item_username)
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_items(request):
+    item_user = request.user 
     if not item_user:
         return Response({"detail": "Not found."}, 
                         status=status.HTTP_400_BAD_REQUEST)
-    owner = Profile.objects.filter(user__in=item_user)
-    items = Item.objects.filter(owner__in=owner)
+    owner = Profile.objects.filter(user = item_user)[0]
+    items = Item.objects.filter(owner = owner)
     serializer = ItemSerializer(instance = items, many=True)
+    for item, item_obj in zip(serializer.data, items):
+        item['id'] = item_obj.id
     return Response(serializer.data, 
                     status=status.HTTP_200_OK)
+    
+
+
+
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])

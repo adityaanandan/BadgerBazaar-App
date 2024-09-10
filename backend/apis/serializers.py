@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = Profile
-        fields = ['user', 'name', 'bio', 'follows', 'profile_img'] 
+        fields = ['user', 'name', 'email', 'bio', 'follows', 'profile_img'] 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta(object):

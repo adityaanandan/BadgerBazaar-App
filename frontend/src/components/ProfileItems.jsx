@@ -19,7 +19,7 @@ const ProfileItems = ({userItems, loc}) => {
                 <CardContent className="p-4">
                   <img src={Blank} alt={item.name} className="w-full h-40 object-cover mb-4 rounded-md" />
                   <h3 className="font-semibold font-poppins text-lg mb-2">{item.name}</h3>
-                  <p className="text-muted-foreground font-poppins mb-4">${item.price}</p>
+                  <p className="text-muted-foreground font-poppins mb-4">${item.starting_price}</p>
                   <div className="flex justify-between">
                     <Button className = "font-poppins" variant="outline" size="sm">
                       <PencilIcon className="h-4 w-4 mr-2" />

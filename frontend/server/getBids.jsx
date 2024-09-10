@@ -2,21 +2,18 @@ import React from 'react'
 
 import axios from 'axios'
 
-const getItems = async () => {
+const getBids = async () => {
     try {
-        console.log(localStorage.getItem('authToken'))
-        const items = await axios.get('http://localhost:8000/items/user_items',{
+        const items = await axios.get('http://localhost:8000/items/user_bids',{
             headers: {
                 'Authorization': `Token ${localStorage.getItem('authToken')}`
             }
         });
 
-        if (items.detail){
-            console.log(items.detail)
-        }
+        
+        
 
-
-        return {sucess: true, data: items.data}; 
+        return {sucess: true, outbids: items.data.outbids, bids: items.data.highest}; 
 
     
 
@@ -32,4 +29,4 @@ const getItems = async () => {
     }
 }
 
-export default getItems
+export default getBids

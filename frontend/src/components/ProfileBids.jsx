@@ -52,6 +52,9 @@ const ProfileBids = ({userBids}) => {
             ))}
           </div>
         </CardContent>
+        <CardFooter>
+        <a href="/items"><Button  className="w-full font-poppins">Find Items</Button> </a>
+        </CardFooter>
       </Card>
   )
 }

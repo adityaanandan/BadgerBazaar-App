@@ -11,6 +11,8 @@ import { CalendarIcon, PlusIcon } from 'lucide-react'
 import { format } from "date-fns"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
+import addItem from '../../server/addItem'
+
 
 import Blank from "../assets/placeholder.svg"
 
@@ -20,19 +22,35 @@ import Blank from "../assets/placeholder.svg"
 
 const NewItem = () => {
     const [newItem, setNewItem] = useState({
-        title: '',
-        startingBid: '',
-        image: null,
+        name: '',
+        description: '',
+        item_img: null,
         date: new Date(),
         category: '',
-        description: ''
+        price: 0.0,
+        
+        
       })
+
+
+    
 
     const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
-          setNewItem({ ...newItem, image: e.target.files[0] })
+          setNewItem({ ...newItem, item_img: e.target.files[0] })
+          console.log(newItem)
         }
       }
+
+    const handleSubmit = async (e) => {
+      
+      e.preventDefault()
+      await addItem(newItem)
+      window.location.reload()
+    }
+
+    
+    
 
 
     
@@ -50,9 +68,9 @@ const NewItem = () => {
             <Label className = "font-bold font-poppins" htmlFor="title">Item Title</Label>
             <Input
               id="title"
-              value={newItem.title}
+              value={newItem.name}
               className = "font-poppins"
-              onChange={(e) => setNewItem({...newItem, title: e.target.value})}
+              onChange={(e) => setNewItem({...newItem, name: e.target.value})}
               required
             />
           </div>
@@ -61,9 +79,9 @@ const NewItem = () => {
             <Input
               id="startingBid"
               type="number"
-              value={newItem.startingBid}
+              value={newItem.price}
               className = "font-poppins"
-              onChange={(e) => setNewItem({...newItem, startingBid: e.target.value})}
+              onChange={(e) => setNewItem({...newItem, price: e.target.value})}
               required
             />
           </div>
@@ -107,11 +125,13 @@ const NewItem = () => {
                 <SelectValue  placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent className = "font-poppins">
-                <SelectItem value="Electronics">Electronics</SelectItem>
-                <SelectItem value="Clothing">Clothing</SelectItem>
-                <SelectItem value="Home & Garden">Home & Garden</SelectItem>
-                <SelectItem value="Collectibles">Collectibles</SelectItem>
-                <SelectItem value="Accessories">Accessories</SelectItem>
+                <SelectItem value="Textbooks & Academic Supplies">Textbooks & Academic Supplies</SelectItem>
+                <SelectItem value="Electronics & Tech">Electronics & Tech</SelectItem>
+                <SelectItem value="Furniture & Home Goods">Furniture & Home Goods</SelectItem>
+                <SelectItem value="Clothing & Accessories">Clothing & Accessories</SelectItem>
+                <SelectItem value="Sports & Outdoor Equipment">Sports & Outdoor Equipment</SelectItem>
+                <SelectItem value="Tickets & Events">Tickets & Events</SelectItem>
+                <SelectItem value="Housing & Subleases">Housing & Subleases</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -125,7 +145,7 @@ const NewItem = () => {
               className="h-32 font-poppins"
             />
           </div>
-          <Button className = "font-poppins" type="submit">
+          <Button type = "submit" onClick = {handleSubmit} className = "font-poppins">
             <PlusIcon className="w-4 h-4 mr-2" />
             Add Item
           </Button>

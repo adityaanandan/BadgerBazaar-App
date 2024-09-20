@@ -5,12 +5,15 @@ from ..serializers import ItemSerializer, OutBidSerializer
 from rest_framework import status
 from django.contrib.auth.models import User
 import json
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import authentication_classes, permission_classes
 
 from django.db import IntegrityError
+from datetime import datetime
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
@@ -78,19 +81,39 @@ def get_items_by_bidder(request):
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def add_item(request):
     user_profile = request.user 
     owner = Profile.objects.filter(user = user_profile)[0]
     
-    data = json.loads(request.body)
+    data = request.data
     item_name = data.get('name', "")
     item_description = data.get('description', "")
-    item_image = data.get('image', None)
-    item_starting_price = data.get('starting_price', 0.0)
+
+    if not item_name or not item_description: 
+        return Response({"detail": "Name and description required."}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    
+    item_image = None
+    
+    if "item_img" in request.FILES:
+        item_image = request.FILES['item_img']
+
+    
+    item_date = data.get('date', None)
+    if item_date is None: 
+        return Response({"detail": "Date required."}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    item_date = datetime.fromisoformat(item_date.replace('Z', '+00:00'))
+    item_starting_price = data.get('price', 0.0)
+    item_starting_price = int(item_starting_price)
+    if item_starting_price <= 0.0: 
+        return Response({"detail": "Starting price must be greater than 0."}, 
+                        status=status.HTTP_400_BAD_REQUEST)
     item_category = data.get('category', None)
 
     try:
-        item = Item(owner=owner, name=item_name, description=item_description, starting_price=item_starting_price, category=item_category)
+        item = Item(owner=owner, name=item_name, description=item_description, image = item_image, starting_price=item_starting_price, category=item_category, sell_by = item_date)
         item.save() 
         serializer = ItemSerializer(instance = item, many=False)
         return Response(serializer.data, 

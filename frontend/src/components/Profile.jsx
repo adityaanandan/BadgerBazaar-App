@@ -67,7 +67,7 @@ export default function Profile({ userData }) {
 
     const res = await editProfile(updatedData);
     if (res.success){
-      navigate('/profile');
+      window.location.reload()
 
     }
 
@@ -148,6 +148,23 @@ export default function Profile({ userData }) {
             )}
           </div>
         </div>
+        <div className="flex justify-between items-center">
+          <div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+            />
+            <Button 
+              className="font-poppins"
+              onClick={() => fileInputRef.current.click()}
+            >
+              <Upload className="mr-2 h-4 w-4" /> Change Profile Picture
+            </Button>
+          </div>
+        </div>
         
         <div className="space-y-2">
           <Label className="font-poppins" htmlFor="email">Email:</Label>
@@ -194,27 +211,9 @@ export default function Profile({ userData }) {
           )}
         </div>
 
-        <div className="flex justify-between items-center">
-          <div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-              accept="image/*"
-              className="hidden"
-            />
-            <Button 
-              className="font-poppins"
-              onClick={() => fileInputRef.current.click()}
-            >
-              <Upload className="mr-2 h-4 w-4" /> Change Profile Picture
-            </Button>
-          </div>
-        </div>
-
-        <div className="pt-4 border-t">
-          <Button onClick = {handleSubmit} className="w-full font-poppins bg-green-600 hover:bg-green-700">
-            <Save  className="mr-2 h-4 w-4" /> Submit All Changes
+        <div className="pt-4 border-t flex justify-center">
+          <Button onClick={handleSubmit} className="md:w-1/3 sm:w-full font-poppins bg-green-600 hover:bg-green-700">
+            <Save className="mr-2 h-4 w-4" /> Submit All Changes
           </Button>
         </div>
       </CardContent>
